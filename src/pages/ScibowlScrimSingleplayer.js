@@ -4,7 +4,7 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import '../App.css';
 
 
-function ScibowlScrimHome(){
+function ScibowlScrimSingleplayer(){
 
     // const firebaseConfig = {
     //     apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -51,11 +51,6 @@ function ScibowlScrimHome(){
         <section class='px-8 w-full' id='tossup-controls'>
             <div class='flex flex-wrap justify-center gap-8 py-8 w-3/4'>
                         
-                        <a href='/hosted-projects'>
-                        <button class='text-xs xl:text-lg flex items-center text-white bg-neutral-600 rounded-lg p-2'>
-                            Back
-                        </button>
-                        </a>
                         
                         <button class='text-xs xl:text-lg flex items-center text-white bg-blue-500 rounded-lg p-2'>
                             Next
@@ -117,4 +112,4 @@ function ScibowlScrimHome(){
     )
 }
 
-export default ScibowlScrimHome;
+export default ScibowlScrimSingleplayer;
