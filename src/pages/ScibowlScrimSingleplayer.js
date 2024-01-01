@@ -1,47 +1,58 @@
 import React, { useState, useEffect} from 'react';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc } from 'firebase/firestore';
+import ScibowlScrimKeys from '../assets/ScibowlScrimKeys.json'
 import '../App.css';
 
 
 function ScibowlScrimSingleplayer(){
 
-    // const firebaseConfig = {
-    //     apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
-    //     authDomain: "scibowlscrim.firebaseapp.com",
-    //     databaseURL: "https://scibowlscrim-default-rtdb.firebaseio.com",
-    //     projectId: "scibowlscrim",
-    //     storageBucket: "scibowlscrim.appspot.com",
-    //     messagingSenderId: "835026328193",
-    //     appId: "1:835026328193:web:ced3db488d497e50dfcb80",
-    //     measurementId: "G-5X244TV1Y4"
-    //   };
+    const [questionData, setQuestionData] = useState('')
+    const [tossupBody, setTossupBody] = useState('')
 
-    //   const app = initializeApp(firebaseConfig);
-    // const db = getFirestore(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
+        authDomain: "scibowlscrim.firebaseapp.com",
+        databaseURL: "https://scibowlscrim-default-rtdb.firebaseio.com",
+        projectId: "scibowlscrim",
+        storageBucket: "scibowlscrim.appspot.com",
+        messagingSenderId: "835026328193",
+        appId: "1:835026328193:web:ced3db488d497e50dfcb80",
+        measurementId: "G-5X244TV1Y4"
+      };
 
-    // useEffect(() => {
-    //     const fetchRandomDoc = async () => {
-    //         // make python script to get a list of all the documents in the collection then paste the list here and just access a random item in the list to save on number of reads
-    //         const querySnapshot = await getDocs(collection(db, "ScibowlScrim"));
-    //         const docs = querySnapshot.docs;
-    //         const randomDoc = docs[Math.floor(Math.random() * docs.length)];
-    //         console.log("Random Document: ", randomDoc.data());
+      const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+    useEffect(() => {
+        const fetchDoc = async () => {
             
-    //         let category = randomDoc.category
-    //         let parent_packet = randomDoc.parent_packet
-    //         let tossup_type = randomDoc.tossup_type
-    //         let tossup_question = randomDoc.tossup_question
-    //         let tossup_answer = randomDoc.tossup_answer
-    //         let bonuns_type = randomDoc.bonuns_type
-    //         let bonus_question = randomDoc.bonus_question
-    //         let bonus_anwer = randomDoc.bonus_answer
+            const docNames = ScibowlScrimKeys['ScibowlScrim']
+            const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
 
-    //         console.log(category)
-    //     }
+            const docRef = doc(db, "ScibowlScrim", randomDocName);
+            const docSnapshot = await getDoc(docRef);
+
+            console.log(docSnapshot.data());
+            
+            let category = docSnapshot.get('category')
+            let parent_packet = docSnapshot.get('parent_packet')
+            let tossup_type = docSnapshot.get('tossup_type')
+            let tossup_question = docSnapshot.get('tossup_question')
+            let tossup_answer = docSnapshot.get('tossup_answer')
+            let bonuns_type = docSnapshot.get('bonuns_type')
+            let bonus_question = docSnapshot.get('bonus_question')
+            let bonus_anwer = docSnapshot.get('bonus_answer')
+
+            let question_data = parent_packet + '; ' + tossup_type + ', ' + category
+            console.log(question_data)
+            setQuestionData(question_data);
+
+            setTossupBody(tossup_question);
+        }
     
-    //     fetchRandomDoc();
-    // }, []);
+        fetchDoc();
+    }, []);
     
     return(
         
@@ -99,13 +110,8 @@ function ScibowlScrimSingleplayer(){
             
                 <div class='w-2/3'>
                     
-                    <div class='py-5 font-bold' id='question-data'>Prometheus Rd 5 Packet 2; Physics, Multiple Choice</div>
-                    <div class='mb-5' id='question-body'>The Poynting vector of an electromagnetic wave measures
-                        W) the momentum of the wave
-                        X) the magnitude of the electric field of the wave
-                        Y) the magnitude of the magnetic field of the wave
-                        Z) the energy flux of the wave
-                    </div>
+                    <div class='py-5 font-bold' id='question-data'>{questionData}</div>
+                    <div class='mb-5' id='question-body'>{tossupBody}</div>
                     <form id='answer'>
                         <div class='input-group flex flex-row mx-auto mb-3'>
                             <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input' type='text' placeholder='Answer'></input>
