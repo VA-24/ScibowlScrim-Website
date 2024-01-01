@@ -9,6 +9,11 @@ function ScibowlScrimSingleplayer(){
 
     const [questionData, setQuestionData] = useState('')
     const [tossupBody, setTossupBody] = useState('')
+    const [tossupAnswer, setTossupAnswer] = useState('')
+    const [parentPacket, setParentPacket] = useState('')
+    const [category, setCategory] = useState('')
+    const [tossupType, setTossupType] = useState('')
+
     const [tossupsSeen, setTossupsSeen] = useState(0)
     const [tossupsCorrect, setTossupsCorrect] = useState('')
     const [tossupsIncorrect, setTossupsIncorrect] = useState('')
@@ -16,6 +21,8 @@ function ScibowlScrimSingleplayer(){
     const [bonusesCorrect, setBonusesCorrect] = useState('')
     const [bonusesIncorrect, setBonusesIncorrect] = useState('')
     const [score, setScore] = useState('')
+
+    const [history, setHistory] = useState([])
 
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -45,15 +52,29 @@ function ScibowlScrimSingleplayer(){
                 let tossup_type = docSnapshot.get('tossup_type');
                 let tossup_question = docSnapshot.get('tossup_question');
                 let tossup_answer = docSnapshot.get('tossup_answer');
-                let bonuns_type = docSnapshot.get('bonuns_type');
+                let bonuxs_type = docSnapshot.get('bonus_type');
                 let bonus_question = docSnapshot.get('bonus_question');
                 let bonus_anwer = docSnapshot.get('bonus_answer');
         
-                let question_data = parent_packet + '; ' + tossup_type + ', ' + category;
+                let question_data = parent_packet + ' / ' + tossup_type + ' / ' + category;
                 setQuestionData(question_data);
-        
                 setTossupBody(tossup_question);
+                setTossupAnswer(tossup_answer);
+                setCategory(category);
+                setParentPacket(parent_packet);
+                setTossupType(tossup_type);
+
                 setTossupsSeen(tossupsSeen => tossupsSeen + 1);
+
+                setHistory((prevHistory) => [
+                    ...prevHistory,
+                    {
+                      parent_packet,
+                      category,
+                      tossup_type,
+                    },
+                  ]);
+
             };
         
             fetchDoc();
@@ -100,7 +121,7 @@ function ScibowlScrimSingleplayer(){
 
 
         <section class='px-8 w-full' id='tossup-controls'>
-            <div class='flex flex-wrap justify-center gap-8 py-3 w-2/3'>
+            <div class='flex flex-wrap justify-center gap-2 py-3 w-2/3'>
                         
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
@@ -125,6 +146,7 @@ function ScibowlScrimSingleplayer(){
                     
                     <div class='py-5 font-bold' id='question-data'>{questionData}</div>
                     <div class='mb-5' id='question-body'>{tossupBody}</div>
+
                     <form id='answer'>
                         <div class='input-group flex flex-row mx-auto mb-3'>
                             <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input' type='text' placeholder='Answer'></input>
@@ -132,69 +154,152 @@ function ScibowlScrimSingleplayer(){
                         </div>
                     </form>
 
-                    <div class='' id='question-history'></div>
+                    <div style={{ height: '0.2px', width: '100%', background: 'gray', marginBottom: '10px' }}></div>
+
+                    <ul className='' id='question-history'>
+                        {history.slice(0).reverse().map((item, index) => (
+                        <div key={index} className='bg-gray-100 p-2 mb-2 rounded border border-gray-300 rounded'>
+                            <div className='font-bold'>
+                                {item.parent_packet} / {item.category} / {item.tossup_type}
+                            </div>
+                        </div>
+                        ))}
+                    </ul>
                 </div>
 
-                <div class='justify-center ml-auto items-center w-1/3 px-10 py-5' id='session-settings'>
-                    <h1 class='mx-auto mb-3 font-bold'>Session Stats</h1>
-                    <div class='mx-auto mb-3' id='tossups-seen'>Tossups seen: {tossupsSeen}</div>
-                    <div class='mx-auto mb-3' id='tossups-correct'> Tossups correct: 0</div>
-                    <div class='mx-auto mb-3' id='tossups-incorrect'> Tossups incorrect: 0</div>
-                    <div class='mx-auto mb-3' id='bonuses-seen'> Bonuses seen: 0</div>
-                    <div class='mx-auto mb-3' id='bonuses-correct'> Bonuses correct: 0</div>
-                    <div class='mx-auto mb-3' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
-                    <div class='mx-auto mb-10' id='bonuses-incorrect'> Score: 0</div>
+                <div class='justify-center ml-auto items-center w-1/3 px-12 py-5' id='session-settings'>
+                    <h1 class='mx-auto mb-3 ml-2 font-bold'>Session Stats</h1>
+                    <div class='mx-auto mb-3 ml-2' id='tossups-seen'>Tossups seen: {tossupsSeen}</div>
+                    <div class='mx-auto mb-3 ml-2' id='tossups-correct'> Tossups correct: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='tossups-incorrect'> Tossups incorrect: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-seen'> Bonuses seen: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-correct'> Bonuses correct: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
+                    <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: 0</div>
+                
 
+                    
+                    <div class='relative group'>
+                        <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
+                            Mode
+                        </h1>
 
-                    <div class='border border-gray-300 rounded w-2/3 p-2 mb-10'>
-                        <h1 class='mx-auto mb-3 font-bold'>Mode</h1>
-        
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                        <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
+                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
+                            <input type='checkbox' className='mr-3' value='tossups and bonuses'/>
                             Tossups and Bonuses
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups" />
+                            </label>
+
+                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
+                            <input type='checkbox' className='mr-3' value='tossups' />
                             Tossups
-                        </label>
-                        <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="bonuses" />
+                            </label>
+                            
+                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
+                            <input type='checkbox' className='mr-3' value='bonuses' />
                             Bonuses
-                        </label>
+                            </label>
+                        </div>
                     </div>
         
-                    <div class='border border-gray-300 rounded w-2/3 p-2 mb-10'>
-                        <h1 class='mx-auto mb-3 font-bold'>Category</h1>
+                    <div class='relative group'>
+                        <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
+                            Categories
+                        </h1>
 
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups and bonuses" />
-                            All
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups and bonuses" />
-                            Math
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups" />
-                            Physics
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="bonuses" />
-                            Chemistry
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups and bonuses" />
-                            Biology
-                        </label>
-                        <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="tossups" />
-                            Earth and Space
-                        </label>
-                        <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                        <input type="checkbox" class='mr-3' value="bonuses" />
-                            Energy
-                        </label>
+
+                        <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                All
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                Math
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups" />
+                                Physics
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="bonuses" />
+                                Chemistry
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                Biology
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups" />
+                                Earth and Space
+                            </label>
+                            
+                            <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="bonuses" />
+                                Energy
+                            </label>
+                            </div>
                     </div>
+
+                    <div class='relative group'>
+                        <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
+                            Packets
+                        </h1>
+
+
+                        <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                All
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                ScibowlDB
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                MIT
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups" />
+                                ESBOT
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="bonuses" />
+                                Prometheus
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                                LOST
+                            </label>
+
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="tossups" />
+                                Lexington
+                            </label>
+                            
+                            <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="bonuses" />
+                                NSBA
+                            </label>
+
+                            <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <input type="checkbox" class='mr-3' value="bonuses" />
+                                SBST
+                            </label>
+                            </div>
+                    </div>
+                    
 
                 </div>
 
