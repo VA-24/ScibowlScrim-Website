@@ -41,6 +41,7 @@ function ScibowlScrimSingleplayer(){
         useEffect(() => {
             const fetchDoc = async () => {
                 
+
                 const docNames = ScibowlScrimKeys['ScibowlScrim']
                 const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
         
@@ -51,18 +52,26 @@ function ScibowlScrimSingleplayer(){
                 let parent_packet = docSnapshot.get('parent_packet');
                 let tossup_type = docSnapshot.get('tossup_type');
                 let tossup_question = docSnapshot.get('tossup_question');
+                const prevTossupBody = '';
+                const tossup_words = tossup_question.split(' '); // split into array for processing
                 let tossup_answer = docSnapshot.get('tossup_answer');
-                let bonuxs_type = docSnapshot.get('bonus_type');
+                let bonus_type = docSnapshot.get('bonus_type');
                 let bonus_question = docSnapshot.get('bonus_question');
                 let bonus_anwer = docSnapshot.get('bonus_answer');
         
                 let question_data = parent_packet + ' / ' + tossup_type + ' / ' + category;
                 setQuestionData(question_data);
-                setTossupBody(tossup_question);
+                setTossupBody('');
                 setTossupAnswer(tossup_answer);
                 setCategory(category);
                 setParentPacket(parent_packet);
                 setTossupType(tossup_type);
+
+                for (let i = 0; i < tossup_words.length; i++) {
+                    setTimeout(() => {
+                      setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
+                    }, i * 200);
+                  }
 
                 setTossupsSeen(tossupsSeen => tossupsSeen + 1);
 
@@ -74,6 +83,8 @@ function ScibowlScrimSingleplayer(){
                       tossup_type,
                     },
                   ]);
+
+                  
 
             };
         
