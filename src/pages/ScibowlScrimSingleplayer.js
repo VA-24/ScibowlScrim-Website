@@ -9,6 +9,13 @@ function ScibowlScrimSingleplayer(){
 
     const [questionData, setQuestionData] = useState('')
     const [tossupBody, setTossupBody] = useState('')
+    const [tossupsSeen, setTossupsSeen] = useState(0)
+    const [tossupsCorrect, setTossupsCorrect] = useState('')
+    const [tossupsIncorrect, setTossupsIncorrect] = useState('')
+    const [bonusesSeen, setBonusesSeen] = useState('')
+    const [bonusesCorrect, setBonusesCorrect] = useState('')
+    const [bonusesIncorrect, setBonusesIncorrect] = useState('')
+    const [score, setScore] = useState('')
 
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -22,38 +29,48 @@ function ScibowlScrimSingleplayer(){
       };
 
       const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+      const db = getFirestore(app);
 
-    useEffect(() => {
-        const fetchDoc = async () => {
-            
-            const docNames = ScibowlScrimKeys['ScibowlScrim']
-            const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
+        useEffect(() => {
+            const fetchDoc = async () => {
+                
+                const docNames = ScibowlScrimKeys['ScibowlScrim']
+                const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
+        
+                const docRef = doc(db, "ScibowlScrim", randomDocName);
+                const docSnapshot = await getDoc(docRef);
+                
+                let category = docSnapshot.get('category');
+                let parent_packet = docSnapshot.get('parent_packet');
+                let tossup_type = docSnapshot.get('tossup_type');
+                let tossup_question = docSnapshot.get('tossup_question');
+                let tossup_answer = docSnapshot.get('tossup_answer');
+                let bonuns_type = docSnapshot.get('bonuns_type');
+                let bonus_question = docSnapshot.get('bonus_question');
+                let bonus_anwer = docSnapshot.get('bonus_answer');
+        
+                let question_data = parent_packet + '; ' + tossup_type + ', ' + category;
+                setQuestionData(question_data);
+        
+                setTossupBody(tossup_question);
+                setTossupsSeen(tossupsSeen => tossupsSeen + 1);
+            };
+        
+            fetchDoc();
+        
+            function handleKeyDown(event) {
+                if (event.key === "n") {
+                fetchDoc();
+                }
+            }
+        
+            window.addEventListener("keydown", handleKeyDown);
+        
+            return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            };
+        }, []);
 
-            const docRef = doc(db, "ScibowlScrim", randomDocName);
-            const docSnapshot = await getDoc(docRef);
-
-            console.log(docSnapshot.data());
-            
-            let category = docSnapshot.get('category')
-            let parent_packet = docSnapshot.get('parent_packet')
-            let tossup_type = docSnapshot.get('tossup_type')
-            let tossup_question = docSnapshot.get('tossup_question')
-            let tossup_answer = docSnapshot.get('tossup_answer')
-            let bonuns_type = docSnapshot.get('bonuns_type')
-            let bonus_question = docSnapshot.get('bonus_question')
-            let bonus_anwer = docSnapshot.get('bonus_answer')
-
-            let question_data = parent_packet + '; ' + tossup_type + ', ' + category
-            console.log(question_data)
-            setQuestionData(question_data);
-
-            setTossupBody(tossup_question);
-        }
-    
-        fetchDoc();
-    }, []);
-    
     return(
         
         <body class='bg-white min-h-screen m-0'>
@@ -88,11 +105,7 @@ function ScibowlScrimSingleplayer(){
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
                             Next
-                        </button>
-                               
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
-                            Skip
-                        </button>         
+                        </button>  
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
                             Report
@@ -124,12 +137,13 @@ function ScibowlScrimSingleplayer(){
 
                 <div class='justify-center ml-auto items-center w-1/3 px-10 py-5' id='session-settings'>
                     <h1 class='mx-auto mb-3 font-bold'>Session Stats</h1>
-                    <div class='mx-auto mb-3' id='tossups-seen'> Tossups seen: 0</div>
+                    <div class='mx-auto mb-3' id='tossups-seen'>Tossups seen: {tossupsSeen}</div>
                     <div class='mx-auto mb-3' id='tossups-correct'> Tossups correct: 0</div>
                     <div class='mx-auto mb-3' id='tossups-incorrect'> Tossups incorrect: 0</div>
                     <div class='mx-auto mb-3' id='bonuses-seen'> Bonuses seen: 0</div>
                     <div class='mx-auto mb-3' id='bonuses-correct'> Bonuses correct: 0</div>
-                    <div class='mx-auto mb-10' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
+                    <div class='mx-auto mb-3' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
+                    <div class='mx-auto mb-10' id='bonuses-incorrect'> Score: 0</div>
 
 
                     <div class='border border-gray-300 rounded w-2/3 p-2 mb-10'>
