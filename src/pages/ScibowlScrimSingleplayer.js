@@ -9,12 +9,14 @@ function ScibowlScrimSingleplayer(){
 
     const isReading = useRef(false);
     const [buzzed, setBuzzed] = useState(false);
+    const [answerCorrect, setAnswerCorrect] = useState(false);
     
     const [checkboxCategory, setCheckboxCategory] = useState('');
     const [checkboxParentPacket, setCheckboxParentPacket] = useState('');
 
     const [questionData, setQuestionData] = useState('');
     const [tossupBody, setTossupBody] = useState('');
+    const [staticTossupBody, setStaticTossupBody] = useState('');
     const [tossupAnswer, setTossupAnswer] = useState('');
     const [parentPacket, setParentPacket] = useState('');
     const [category, setCategory] = useState('');
@@ -54,6 +56,20 @@ function ScibowlScrimSingleplayer(){
           window.dispatchEvent(event);
       };
 
+      const handleBuzz = () => {
+        const event = new KeyboardEvent('keydown', {
+          key: ' ',
+        });
+        window.dispatchEvent(event);
+    };
+
+    const handlePause = () => {
+        const event = new KeyboardEvent('keydown', {
+          key: 'p',
+        });
+        window.dispatchEvent(event);
+    };
+
       const handleSubmit = (event) => {
         event.preventDefault();
         const answerInput = document.getElementById('answer-input');
@@ -63,6 +79,9 @@ function ScibowlScrimSingleplayer(){
           answerInput.value = "";
           setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1);
           setScore(score => score + 4);
+          setAnswerCorrect(true);
+          const questionBody = document.getElementById('question-body')
+          questionBody.value = staticTossupBody
           handleNextQuestion();
         } else {
           console.log('wrong');
@@ -112,10 +131,12 @@ function ScibowlScrimSingleplayer(){
                 let question_data = parent_packet + ' / ' + tossup_type + ' / ' + category;
                 setQuestionData(question_data);
                 setTossupBody('');
+                setStaticTossupBody(tossup_question);
                 setTossupAnswer(tossup_answer);
                 setCategory(category);
                 setParentPacket(parent_packet);
                 setTossupType(tossup_type);
+                setAnswerCorrect(false);
             
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
@@ -157,6 +178,13 @@ function ScibowlScrimSingleplayer(){
                     isReading.current = false;
                     setBuzzed(true);
                     console.log('buzz')
+                }
+
+                if ((event.key === "p") && document.activeElement !== answerInput) {
+                    if (isReading.current === false){
+                        isReading.current = true;
+                    } else {
+                    isReading.current = false;}
                 }
             }
             
@@ -200,12 +228,16 @@ function ScibowlScrimSingleplayer(){
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handleNextQuestion}>
                             Next
                         </button>  
+
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handlePause}>
+                            Pause
+                        </button>  
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
                             Report
                         </button>
                         
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 ml-auto rounded-lg p-1.5'>
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 ml-auto rounded-lg p-1.5' onClick={handleBuzz}>
                             Buzz
                         </button>
                         
@@ -219,6 +251,7 @@ function ScibowlScrimSingleplayer(){
                     
                     <div class='py-5 font-bold' id='question-data'>{questionData}</div>
                     <div class='mb-5' id='question-body'>{tossupBody}</div>
+                    {answerCorrect&& <div class='mb-5' id='question-answer'>Correct! Answer was: {tossupAnswer}</div>}
 
                     {buzzed &&
                     <form id='answer' onSubmit={handleSubmit}>
