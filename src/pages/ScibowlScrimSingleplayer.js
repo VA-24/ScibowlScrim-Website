@@ -26,7 +26,7 @@ function ScibowlScrimSingleplayer(){
     const [bonusesSeen, setBonusesSeen] = useState('');
     const [bonusesCorrect, setBonusesCorrect] = useState('');
     const [bonusesIncorrect, setBonusesIncorrect] = useState('');
-    const [score, setScore] = useState('');
+    const [score, setScore] = useState(0);
 
     const [history, setHistory] = useState([]);
     const [expandedItems, setExpandedItems] = useState([]);
