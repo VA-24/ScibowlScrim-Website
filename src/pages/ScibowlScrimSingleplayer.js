@@ -9,7 +9,9 @@ function ScibowlScrimSingleplayer(){
 
     const isReading = useRef(false);
     const [buzzed, setBuzzed] = useState(false);
+    const canBuzz = useRef(true);
     const [answerCorrect, setAnswerCorrect] = useState(false);
+    const [answerIncorrect, setAnswerIncorrect] = useState(false);
     
     const [checkboxCategory, setCheckboxCategory] = useState('');
     const [checkboxParentPacket, setCheckboxParentPacket] = useState('');
@@ -87,8 +89,10 @@ function ScibowlScrimSingleplayer(){
           console.log('wrong');
           setBuzzed(false);
           answerInput.value = "";
-          isReading.current = true;
+          const questionBody = document.getElementById('question-body')
+          questionBody.value = staticTossupBody
           setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect + 1);
+          setAnswerIncorrect(true);
         }
       };
 
@@ -137,6 +141,8 @@ function ScibowlScrimSingleplayer(){
                 setParentPacket(parent_packet);
                 setTossupType(tossup_type);
                 setAnswerCorrect(false);
+                setAnswerIncorrect(false);
+                canBuzz.current = true;
             
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
@@ -175,9 +181,12 @@ function ScibowlScrimSingleplayer(){
                 }
 
                 if ((event.key === " ") && document.activeElement !== answerInput && !buzzed) {
+                    if (canBuzz.current === true){
                     isReading.current = false;
-                    setBuzzed(true);
-                    console.log('buzz')
+                        setBuzzed(true);
+                        canBuzz.current = false;
+                        console.log(canBuzz)
+                    }
                 }
 
                 if ((event.key === "p") && document.activeElement !== answerInput) {
@@ -251,7 +260,8 @@ function ScibowlScrimSingleplayer(){
                     
                     <div class='py-5 font-bold' id='question-data'>{questionData}</div>
                     <div class='mb-5' id='question-body'>{tossupBody}</div>
-                    {answerCorrect&& <div class='mb-5' id='question-answer'>Correct! Answer was: {tossupAnswer}</div>}
+                    {answerCorrect&& <div class='mb-5' id='question-answer'>Correct! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
+                    {answerIncorrect&& <div class='mb-5' id='question-answer'>Incorrect! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
 
                     {buzzed &&
                     <form id='answer' onSubmit={handleSubmit}>
