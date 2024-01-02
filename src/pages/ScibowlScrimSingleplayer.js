@@ -8,7 +8,8 @@ import '../App.css';
 function ScibowlScrimSingleplayer(){
 
     const isReading = useRef(false);
-    const hasBuzzed = useRef(false);
+    const [buzzed, setBuzzed] = useState(false);
+    
     const [checkboxCategory, setCheckboxCategory] = useState('');
     const [checkboxParentPacket, setCheckboxParentPacket] = useState('');
 
@@ -20,8 +21,8 @@ function ScibowlScrimSingleplayer(){
     const [tossupType, setTossupType] = useState('');
 
     const [tossupsSeen, setTossupsSeen] = useState(0);
-    const [tossupsCorrect, setTossupsCorrect] = useState('');
-    const [tossupsIncorrect, setTossupsIncorrect] = useState('');
+    const [tossupsCorrect, setTossupsCorrect] = useState(0);
+    const [tossupsIncorrect, setTossupsIncorrect] = useState(0);
     const [bonusesSeen, setBonusesSeen] = useState('');
     const [bonusesCorrect, setBonusesCorrect] = useState('');
     const [bonusesIncorrect, setBonusesIncorrect] = useState('');
@@ -35,7 +36,7 @@ function ScibowlScrimSingleplayer(){
     }, [checkboxCategory]);
 
     const handleHistoryItemClick = (index) => {
-        const originalIndex = history.length - 2 - index; // Calculate the original index
+        const originalIndex = history.length - 2 - index;
         setHistory((prevHistory) =>
           prevHistory.map((item, i) => {
             if (i === originalIndex) {
@@ -47,11 +48,29 @@ function ScibowlScrimSingleplayer(){
       };
 
       const handleNextQuestion = () => {
-          // Simulate 'n' key press
           const event = new KeyboardEvent('keydown', {
             key: 'n',
           });
           window.dispatchEvent(event);
+      };
+
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        const answerInput = document.getElementById('answer-input');
+        if (tossupAnswer.toLowerCase().includes(answerInput.value.toLowerCase())) {
+          console.log('correct');
+          setBuzzed(false);
+          answerInput.value = "";
+          setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1);
+          setScore(score => score + 4);
+          handleNextQuestion();
+        } else {
+          console.log('wrong');
+          setBuzzed(false);
+          answerInput.value = "";
+          isReading.current = true;
+          setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect + 1);
+        }
       };
 
     const firebaseConfig = {
@@ -85,10 +104,11 @@ function ScibowlScrimSingleplayer(){
                 let tossup_question = docSnapshot.get('tossup_question');
                 const tossup_words = tossup_question.split(' '); // split into array for processing
                 let tossup_answer = docSnapshot.get('tossup_answer');
+                console.log(tossup_answer);
                 let bonus_type = docSnapshot.get('bonus_type');
                 let bonus_question = docSnapshot.get('bonus_question');
                 let bonus_anwer = docSnapshot.get('bonus_answer');
-        
+    
                 let question_data = parent_packet + ' / ' + tossup_type + ' / ' + category;
                 setQuestionData(question_data);
                 setTossupBody('');
@@ -133,8 +153,10 @@ function ScibowlScrimSingleplayer(){
                     fetchDoc();
                 }
 
-                if ((event.key === " ") && document.activeElement !== answerInput) {
-                    console.log('test')
+                if ((event.key === " ") && document.activeElement !== answerInput && !buzzed) {
+                    isReading.current = false;
+                    setBuzzed(true);
+                    console.log('buzz')
                 }
             }
             
@@ -198,12 +220,14 @@ function ScibowlScrimSingleplayer(){
                     <div class='py-5 font-bold' id='question-data'>{questionData}</div>
                     <div class='mb-5' id='question-body'>{tossupBody}</div>
 
-                    <form id='answer'>
+                    {buzzed &&
+                    <form id='answer' onSubmit={handleSubmit}>
                         <div class='input-group flex flex-row mx-auto mb-3'>
-                            <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input' type='text' placeholder='Answer'></input>
-                            <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit' type='submit'>Guess</button>
+                        <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input' type='text' placeholder='Answer'></input>
+                        <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit' type='submit'>Guess</button>
                         </div>
                     </form>
+                    }
 
                     <div style={{ height: '0.2px', width: '100%', background: 'gray', marginBottom: '10px' }}></div>
 
@@ -227,12 +251,12 @@ function ScibowlScrimSingleplayer(){
                 <div class='justify-center ml-auto items-center w-1/3 px-12 py-5' id='session-settings'>
                     <h1 class='mx-auto mb-3 ml-2 font-bold'>Session Stats</h1>
                     <div class='mx-auto mb-3 ml-2' id='tossups-seen'>Tossups seen: {tossupsSeen}</div>
-                    <div class='mx-auto mb-3 ml-2' id='tossups-correct'> Tossups correct: 0</div>
-                    <div class='mx-auto mb-3 ml-2' id='tossups-incorrect'> Tossups incorrect: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='tossups-correct'> Tossups correct: {tossupsCorrect}</div>
+                    <div class='mx-auto mb-3 ml-2' id='tossups-incorrect'> Tossups incorrect: {tossupsIncorrect}</div>
                     <div class='mx-auto mb-3 ml-2' id='bonuses-seen'> Bonuses seen: 0</div>
                     <div class='mx-auto mb-3 ml-2' id='bonuses-correct'> Bonuses correct: 0</div>
                     <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
-                    <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: 0</div>
+                    <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: {score}</div>
                      
                     <div class='relative group'>
                         <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
