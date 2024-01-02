@@ -258,37 +258,37 @@ function ScibowlScrimSingleplayer(){
 
                         <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="all" />
                                 All
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="math" />
                                 Math
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups" />
+                            <input type="checkbox" class='mr-3' value="physics" />
                                 Physics
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="bonuses" />
+                            <input type="checkbox" class='mr-3' value="chemistry" />
                                 Chemistry
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="biology" />
                                 Biology
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups" />
+                            <input type="checkbox" class='mr-3' value="earth and space" />
                                 Earth and Space
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="bonuses" />
+                            <input type="checkbox" class='mr-3' value="energy" />
                                 Energy
                             </label>
                             </div>
@@ -302,47 +302,47 @@ function ScibowlScrimSingleplayer(){
 
                         <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="all" />
                                 All
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="scibowldb" />
                                 ScibowlDB (easy)
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="mit" />
                                 MIT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups" />
+                            <input type="checkbox" class='mr-3' value="esbot" />
                                 ESBOT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="bonuses" />
+                            <input type="checkbox" class='mr-3' value="prometheus" />
                                 Prometheus
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups and bonuses" />
+                            <input type="checkbox" class='mr-3' value="lost" />
                                 LOST
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="tossups" />
+                            <input type="checkbox" class='mr-3' value="lexington" />
                                 Lexington
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="bonuses" />
+                            <input type="checkbox" class='mr-3' value="nsba" />
                                 NSBA
                             </label>
 
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="bonuses" />
+                            <input type="checkbox" class='mr-3' value="sbst" />
                                 SBST
                             </label>
                             </div>
