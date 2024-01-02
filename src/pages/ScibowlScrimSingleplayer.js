@@ -8,6 +8,7 @@ import '../App.css';
 function ScibowlScrimSingleplayer(){
 
     const isReading = useRef(false);
+    const hasBuzzed = useRef(false);
 
     const [questionData, setQuestionData] = useState('');
     const [tossupBody, setTossupBody] = useState('');
@@ -91,10 +92,11 @@ function ScibowlScrimSingleplayer(){
             
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
-                        setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
-                        if (i === (tossup_words.length - 1)) {
-                            isReading.current = false;
-                            console.log(isReading.current);
+                        if (isReading.current !== false) {
+                            setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
+                            if (i === (tossup_words.length - 1)) {
+                                isReading.current = false;
+                            }
                         }
                     }, i * 250);
                 }
@@ -123,10 +125,12 @@ function ScibowlScrimSingleplayer(){
                 if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInput && isReading.current === false) {
                     fetchDoc();
                 }
+
+                if ((event.key === " ") && document.activeElement !== answerInput) {
+                    console.log('test')
+                }
             }
-
             
-
             window.addEventListener("keydown", handleKeyDown);
         
             return () => {
@@ -204,8 +208,8 @@ function ScibowlScrimSingleplayer(){
                             </div>
                             {item.isExpanded && (
                                 <div className='mt-2'>
-                                <p class='font-medium mb-2'>{item.tossup_question}</p>
-                                <p class='font-medium'>Answer: {item.tossup_answer}</p>
+                                <p class='font-small mb-2'>{item.tossup_question}</p>
+                                <p class='font-small'>Answer: {item.tossup_answer}</p>
                                 </div>
                             )}
                         </div>
