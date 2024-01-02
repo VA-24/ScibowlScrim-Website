@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDoc } from 'firebase/firestore';
 import ScibowlScrimKeys from '../assets/ScibowlScrimKeys.json'
@@ -26,7 +26,7 @@ function ScibowlScrimSingleplayer(){
     const [expandedItems, setExpandedItems] = useState([]);
 
     const handleHistoryItemClick = (index) => {
-        const originalIndex = history.length - 1 - index; // Calculate the original index
+        const originalIndex = history.length - 2 - index; // Calculate the original index
         setHistory((prevHistory) =>
           prevHistory.map((item, i) => {
             if (i === originalIndex) {
@@ -78,12 +78,15 @@ function ScibowlScrimSingleplayer(){
                 setCategory(category);
                 setParentPacket(parent_packet);
                 setTossupType(tossup_type);
-
+            
                 for (let i = 0; i < tossup_words.length; i++) {
+                    
                     setTimeout(() => {
-                      setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
+                        setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
+                
                     }, i * 250);
-                  }
+                }
+
 
                 setTossupsSeen(tossupsSeen => tossupsSeen + 1);
 
@@ -103,10 +106,13 @@ function ScibowlScrimSingleplayer(){
             fetchDoc();
         
             function handleKeyDown(event) {
-                if (event.key === "n") {
-                fetchDoc();
+                const answerInput = document.getElementById('answer-input');
+
+                if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInput) {
+                    fetchDoc();
                 }
             }
+
             window.addEventListener("keydown", handleKeyDown);
         
             return () => {
@@ -141,11 +147,8 @@ function ScibowlScrimSingleplayer(){
             </nav>
         </main>
 
-
-
         <section class='px-8 w-full' id='tossup-controls'>
             <div class='flex flex-wrap justify-center gap-2 py-3 w-2/3'>
-                        
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
                             Next
@@ -180,7 +183,7 @@ function ScibowlScrimSingleplayer(){
                     <div style={{ height: '0.2px', width: '100%', background: 'gray', marginBottom: '10px' }}></div>
 
                     <ul className='' id='question-history'>
-                        {history.slice(1).reverse().map((item, index) => (
+                        {history.slice(0, -1).reverse().map((item, index) => (
                         <div key={index} className='bg-gray-100 p-2 mb-2 rounded border border-gray-300 rounded' onClick={() => handleHistoryItemClick(index)}>
                             <div className='font-bold'>
                                 {item.parent_packet} / {item.category} / {item.tossup_type}
