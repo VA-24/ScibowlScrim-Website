@@ -7,6 +7,8 @@ import '../App.css';
 
 function ScibowlScrimSingleplayer(){
 
+    const isReading = useRef(false);
+
     const [questionData, setQuestionData] = useState('');
     const [tossupBody, setTossupBody] = useState('');
     const [tossupAnswer, setTossupAnswer] = useState('');
@@ -54,7 +56,7 @@ function ScibowlScrimSingleplayer(){
         useEffect(() => {
             const fetchDoc = async () => {
                 
-
+                isReading.current = true;
                 const docNames = ScibowlScrimKeys['ScibowlScrim']
                 const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
         
@@ -80,13 +82,15 @@ function ScibowlScrimSingleplayer(){
                 setTossupType(tossup_type);
             
                 for (let i = 0; i < tossup_words.length; i++) {
-                    
                     setTimeout(() => {
                         setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
-                
+                        if (i === (tossup_words.length - 1)) {
+                            isReading.current = false;
+                            console.log(isReading.current);
+                        }
                     }, i * 250);
                 }
-
+                
 
                 setTossupsSeen(tossupsSeen => tossupsSeen + 1);
 
@@ -108,7 +112,7 @@ function ScibowlScrimSingleplayer(){
             function handleKeyDown(event) {
                 const answerInput = document.getElementById('answer-input');
 
-                if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInput) {
+                if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInput && isReading.current === false) {
                     fetchDoc();
                 }
             }
