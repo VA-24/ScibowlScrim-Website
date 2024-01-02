@@ -95,7 +95,7 @@ function ScibowlScrimSingleplayer(){
                       tossup_type,
                       tossup_question,
                       tossup_answer,
-                      isExpanded: false
+                      isExpanded: false,
                     },
                   ]);
             };
@@ -180,7 +180,7 @@ function ScibowlScrimSingleplayer(){
                     <div style={{ height: '0.2px', width: '100%', background: 'gray', marginBottom: '10px' }}></div>
 
                     <ul className='' id='question-history'>
-                        {history.slice(0).reverse().map((item, index) => (
+                        {history.slice(1).reverse().map((item, index) => (
                         <div key={index} className='bg-gray-100 p-2 mb-2 rounded border border-gray-300 rounded' onClick={() => handleHistoryItemClick(index)}>
                             <div className='font-bold'>
                                 {item.parent_packet} / {item.category} / {item.tossup_type}
