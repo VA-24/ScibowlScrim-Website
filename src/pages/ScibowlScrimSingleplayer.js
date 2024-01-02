@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef} from 'react';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, doc, getDoc } from 'firebase/firestore';
 import ScibowlScrimKeys from '../assets/ScibowlScrimKeys.json'
 import '../App.css';
 
@@ -9,6 +9,8 @@ function ScibowlScrimSingleplayer(){
 
     const isReading = useRef(false);
     const hasBuzzed = useRef(false);
+    const [checkboxCategory, setCheckboxCategory] = useState('');
+    const [checkboxParentPacket, setCheckboxParentPacket] = useState('');
 
     const [questionData, setQuestionData] = useState('');
     const [tossupBody, setTossupBody] = useState('');
@@ -27,6 +29,10 @@ function ScibowlScrimSingleplayer(){
 
     const [history, setHistory] = useState([]);
     const [expandedItems, setExpandedItems] = useState([]);
+
+    useEffect(() => {
+        console.log("Selected Category:", checkboxCategory);
+    }, [checkboxCategory]);
 
     const handleHistoryItemClick = (index) => {
         const originalIndex = history.length - 2 - index; // Calculate the original index
@@ -71,6 +77,7 @@ function ScibowlScrimSingleplayer(){
         
                 const docRef = doc(db, "ScibowlScrim", randomDocName);
                 const docSnapshot = await getDoc(docRef);
+
                 
                 let category = docSnapshot.get('category');
                 let parent_packet = docSnapshot.get('parent_packet');
@@ -263,32 +270,32 @@ function ScibowlScrimSingleplayer(){
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="math" />
+                            <input type="checkbox" class='mr-3' value="math" onChange={(e) => setCheckboxCategory(e.target.value)} />
                                 Math
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="physics" />
+                            <input type="checkbox" class='mr-3' value="physics" onChange={(e) => setCheckboxCategory(e.target.value)}/>
                                 Physics
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="chemistry" />
+                            <input type="checkbox" class='mr-3' value="chemistry" onChange={(e) => setCheckboxCategory(e.target.value)}/>
                                 Chemistry
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="biology" />
+                            <input type="checkbox" class='mr-3' value="biology" onChange={(e) => setCheckboxCategory(e.target.value)}/>
                                 Biology
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="earth and space" />
+                            <input type="checkbox" class='mr-3' value="earth and space" onChange={(e) => setCheckboxCategory(e.target.value)}/>
                                 Earth and Space
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="energy" />
+                            <input type="checkbox" class='mr-3' value="energy" onChange={(e) => setCheckboxCategory(e.target.value)}/>
                                 Energy
                             </label>
                             </div>
@@ -307,42 +314,42 @@ function ScibowlScrimSingleplayer(){
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="scibowldb" />
+                            <input type="checkbox" class='mr-3' value="scibowldb" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 ScibowlDB (easy)
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="mit" />
+                            <input type="checkbox" class='mr-3' value="mit" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 MIT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="esbot" />
+                            <input type="checkbox" class='mr-3' value="esbot" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 ESBOT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="prometheus" />
+                            <input type="checkbox" class='mr-3' value="prometheus" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 Prometheus
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="lost" />
+                            <input type="checkbox" class='mr-3' value="lost" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 LOST
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="lexington" />
+                            <input type="checkbox" class='mr-3' value="lexington" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 Lexington
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="nsba" />
+                            <input type="checkbox" class='mr-3' value="nsba" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 NSBA
                             </label>
 
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="sbst" />
+                            <input type="checkbox" class='mr-3' value="sbst" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
                                 SBST
                             </label>
                             </div>
