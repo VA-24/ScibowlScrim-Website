@@ -39,6 +39,14 @@ function ScibowlScrimSingleplayer(){
         );
       };
 
+      const handleNextQuestion = () => {
+          // Simulate 'n' key press
+          const event = new KeyboardEvent('keydown', {
+            key: 'n',
+          });
+          window.dispatchEvent(event);
+      };
+
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
         authDomain: "scibowlscrim.firebaseapp.com",
@@ -117,6 +125,8 @@ function ScibowlScrimSingleplayer(){
                 }
             }
 
+            
+
             window.addEventListener("keydown", handleKeyDown);
         
             return () => {
@@ -154,7 +164,7 @@ function ScibowlScrimSingleplayer(){
         <section class='px-8 w-full' id='tossup-controls'>
             <div class='flex flex-wrap justify-center gap-2 py-3 w-2/3'>
                         
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handleNextQuestion}>
                             Next
                         </button>  
                         
