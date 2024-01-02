@@ -7,22 +7,35 @@ import '../App.css';
 
 function ScibowlScrimSingleplayer(){
 
-    const [questionData, setQuestionData] = useState('')
-    const [tossupBody, setTossupBody] = useState('')
-    const [tossupAnswer, setTossupAnswer] = useState('')
-    const [parentPacket, setParentPacket] = useState('')
-    const [category, setCategory] = useState('')
-    const [tossupType, setTossupType] = useState('')
+    const [questionData, setQuestionData] = useState('');
+    const [tossupBody, setTossupBody] = useState('');
+    const [tossupAnswer, setTossupAnswer] = useState('');
+    const [parentPacket, setParentPacket] = useState('');
+    const [category, setCategory] = useState('');
+    const [tossupType, setTossupType] = useState('');
 
-    const [tossupsSeen, setTossupsSeen] = useState(0)
-    const [tossupsCorrect, setTossupsCorrect] = useState('')
-    const [tossupsIncorrect, setTossupsIncorrect] = useState('')
-    const [bonusesSeen, setBonusesSeen] = useState('')
-    const [bonusesCorrect, setBonusesCorrect] = useState('')
-    const [bonusesIncorrect, setBonusesIncorrect] = useState('')
-    const [score, setScore] = useState('')
+    const [tossupsSeen, setTossupsSeen] = useState(0);
+    const [tossupsCorrect, setTossupsCorrect] = useState('');
+    const [tossupsIncorrect, setTossupsIncorrect] = useState('');
+    const [bonusesSeen, setBonusesSeen] = useState('');
+    const [bonusesCorrect, setBonusesCorrect] = useState('');
+    const [bonusesIncorrect, setBonusesIncorrect] = useState('');
+    const [score, setScore] = useState('');
 
-    const [history, setHistory] = useState([])
+    const [history, setHistory] = useState([]);
+    const [expandedItems, setExpandedItems] = useState([]);
+
+    const handleHistoryItemClick = (index) => {
+        const originalIndex = history.length - 1 - index; // Calculate the original index
+        setHistory((prevHistory) =>
+          prevHistory.map((item, i) => {
+            if (i === originalIndex) {
+              return { ...item, isExpanded: !item.isExpanded };
+            }
+            return item;
+          })
+        );
+      };
 
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -52,7 +65,6 @@ function ScibowlScrimSingleplayer(){
                 let parent_packet = docSnapshot.get('parent_packet');
                 let tossup_type = docSnapshot.get('tossup_type');
                 let tossup_question = docSnapshot.get('tossup_question');
-                const prevTossupBody = '';
                 const tossup_words = tossup_question.split(' '); // split into array for processing
                 let tossup_answer = docSnapshot.get('tossup_answer');
                 let bonus_type = docSnapshot.get('bonus_type');
@@ -70,7 +82,7 @@ function ScibowlScrimSingleplayer(){
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
                       setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
-                    }, i * 200);
+                    }, i * 250);
                   }
 
                 setTossupsSeen(tossupsSeen => tossupsSeen + 1);
@@ -81,11 +93,11 @@ function ScibowlScrimSingleplayer(){
                       parent_packet,
                       category,
                       tossup_type,
+                      tossup_question,
+                      tossup_answer,
+                      isExpanded: false
                     },
                   ]);
-
-                  
-
             };
         
             fetchDoc();
@@ -95,13 +107,13 @@ function ScibowlScrimSingleplayer(){
                 fetchDoc();
                 }
             }
-        
             window.addEventListener("keydown", handleKeyDown);
         
             return () => {
             window.removeEventListener("keydown", handleKeyDown);
             };
         }, []);
+
 
     return(
         
@@ -169,10 +181,16 @@ function ScibowlScrimSingleplayer(){
 
                     <ul className='' id='question-history'>
                         {history.slice(0).reverse().map((item, index) => (
-                        <div key={index} className='bg-gray-100 p-2 mb-2 rounded border border-gray-300 rounded'>
+                        <div key={index} className='bg-gray-100 p-2 mb-2 rounded border border-gray-300 rounded' onClick={() => handleHistoryItemClick(index)}>
                             <div className='font-bold'>
                                 {item.parent_packet} / {item.category} / {item.tossup_type}
                             </div>
+                            {item.isExpanded && (
+                                <div className='mt-2'>
+                                <p class='font-medium mb-2'>{item.tossup_question}</p>
+                                <p class='font-medium'>Answer: {item.tossup_answer}</p>
+                                </div>
+                            )}
                         </div>
                         ))}
                     </ul>
@@ -187,9 +205,7 @@ function ScibowlScrimSingleplayer(){
                     <div class='mx-auto mb-3 ml-2' id='bonuses-correct'> Bonuses correct: 0</div>
                     <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
                     <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: 0</div>
-                
-
-                    
+                     
                     <div class='relative group'>
                         <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
                             Mode
@@ -271,7 +287,7 @@ function ScibowlScrimSingleplayer(){
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             <input type="checkbox" class='mr-3' value="tossups and bonuses" />
-                                ScibowlDB
+                                ScibowlDB (easy)
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
