@@ -81,10 +81,16 @@ function ScibowlScrimSingleplayer(){
         window.dispatchEvent(event);
     };
 
-    const handleUserProtest = () => {
+    const addPoints = () => {
         setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect - 1)
         setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1)
         setScore(score => score + 4)
+    };
+
+    const subtractPoints = () => {
+        setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect + 1)
+        setTossupsCorrect(tossupsCorrect => tossupsCorrect - 1)
+        setScore(score => score - 4)
     };
 
       const handleTossupSubmit = (event) => {
@@ -291,8 +297,12 @@ function ScibowlScrimSingleplayer(){
                             Pause
                         </button>  
 
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handleUserProtest}>
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={addPoints}>
                             I was right
+                        </button>
+
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={subtractPoints}>
+                            I was wrong
                         </button>  
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
