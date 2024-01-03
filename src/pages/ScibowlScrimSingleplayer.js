@@ -211,6 +211,8 @@ function ScibowlScrimSingleplayer(){
                       tossup_type,
                       tossup_question,
                       tossup_answer,
+                      bonus_question,
+                      bonus_answer,
                       isExpanded: false,
                     },
                   ]);
@@ -345,8 +347,11 @@ function ScibowlScrimSingleplayer(){
                             </div>
                             {item.isExpanded && (
                                 <div className='mt-2'>
-                                <p class='font-small mb-2'>{item.tossup_question}</p>
-                                <p class='font-small'>Answer: {item.tossup_answer}</p>
+                                <p class='font-small mb-2'>Tossup: {item.tossup_question}</p>
+                                <p class='font-small mb-2'>Tossup Answer: {item.tossup_answer}</p>
+                                <p class='font-small mb-2'>Bonus: {item.bonus_question}</p>
+                                <p class='font-small'>Bonus Answer: {item.bonus_answer}</p>
+
                                 </div>
                             )}
                         </div>
