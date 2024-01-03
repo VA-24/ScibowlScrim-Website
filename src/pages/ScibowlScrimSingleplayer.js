@@ -85,12 +85,34 @@ function ScibowlScrimSingleplayer(){
         setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect - 1)
         setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1)
         setScore(score => score + 4)
+        setAnswerCorrect(true);
+        setAnswerIncorrect(false);
+        setBonusAnswered(false);
+    };
+
+    const addBonusPoints = () => {
+        setBonusIncorrect(bonusIncorrect => bonusIncorrect - 1)
+        setBonusCorrect(bonusCorrect => bonusCorrect + 1)
+        setScore(score => score - 10)
+        setBonusCorrect(false);
+        setBonusIncorrect(true);
     };
 
     const subtractPoints = () => {
         setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect + 1)
         setTossupsCorrect(tossupsCorrect => tossupsCorrect - 1)
         setScore(score => score - 4)
+        setAnswerCorrect(false);
+        setBonusAnswered(true);
+        setAnswerIncorrect(true);
+    };
+
+    const subtractBonusPoints = () => {
+        setBonusIncorrect(bonusIncorrect => bonusIncorrect + 1)
+        setBonusCorrect(bonusCorrect => bonusCorrect - 1)
+        setScore(score => score + 10)
+        setBonusCorrect(true);
+        setBonusIncorrect(false);
     };
 
       const handleTossupSubmit = (event) => {
@@ -295,14 +317,6 @@ function ScibowlScrimSingleplayer(){
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handlePause}>
                             Pause
                         </button>  
-
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={addPoints}>
-                            I was right
-                        </button>
-
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={subtractPoints}>
-                            I was wrong
-                        </button>  
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
                             Report
@@ -322,16 +336,37 @@ function ScibowlScrimSingleplayer(){
                     
                     <div class='py-5 font-bold' id='tossup-data'>{tossupData}, Tossup:</div>
                     <div class='mb-5' id='tossup-body'>{answered ? staticTossupBody.current : tossupBody}</div>
-                    {answerCorrect&& <div class='mb-5' id='tossup-answer'>Correct! Answer was: {tossupAnswer}</div>}
-                    {answerIncorrect&& <div class='mb-5' id='tossup-answer'>Incorrect! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
-                    {buzzed &&
-                    <form id='answer-tossup' onSubmit={handleTossupSubmit}>
-                        <div class='input-group flex flex-row mx-auto mb-3'>
-                        <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input-tossup' type='text' placeholder='Answer'></input>
-                        <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit-tossup' type='submit'>Guess</button>
-                        </div>
-                    </form>
+                    {answerCorrect&& 
+                    <div class='flex flex-row'>
+                        <div class='mb-5' id='tossup-answer'>
+                            Correct! Answer was: {tossupAnswer}
+                            </div>
+
+                            <button class='text-sm xsm:text-lg flex items-center text-blue-800 ml-auto rounded-lg pb-10' onClick={subtractPoints}>
+                                I was wrong
+                            </button>
+                    </div>
                     }
+
+                    {answerIncorrect&& 
+                    <div class='flex flex-row'>
+                        <div class='mb-5' id='tossup-answer'>
+                            Incorrect! Answer was: {tossupAnswer}. Press 'n' to go to the next question.
+                        </div>
+
+                        <button class='text-sm xsm:text-lg flex items-center text-blue-800 ml-auto rounded-lg pb-10' onClick={addPoints}>
+                            I was right
+                        </button>  
+                    </div>}
+                    {buzzed &&
+                        <form id='answer-tossup' onSubmit={handleTossupSubmit}>
+                            <div class='input-group flex flex-row mx-auto mb-3'>
+                            <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input-tossup' type='text' placeholder='Answer'></input>
+                            <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit-tossup' type='submit'>Guess</button>
+                            </div>
+                        </form>
+                    }
+
 
                     {answerCorrect&& <div class='mb-5 font-bold' id='bonus-data'>{bonusData}, Bonus:</div>}
                     {answerCorrect&& <div class='mb-5' id='bonus-body'>{bonusBody}</div>}
@@ -341,8 +376,20 @@ function ScibowlScrimSingleplayer(){
                         <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit-bonus' type='submit'>Guess</button>
                         </div>
                     </form>)}
-                    {bonusCorrect&& <div class='mb-5' id='bonus-answer'>Correct! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>}
-                    {bonusIncorrect&& <div class='mb-5' id='bonus-answer'>Incorrect! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>}
+                    {bonusCorrect&& 
+                    <div class='flex flex-row'>
+                    <div class='mb-5' id='bonus-answer'>Correct! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>
+                        <button class='text-sm xsm:text-lg flex items-center text-blue-800 ml-auto rounded-lg pb-10' onClick={addBonusPoints}>
+                            I was wrong
+                        </button> 
+                        </div> }
+                    {bonusIncorrect&& 
+                    <div class='flex flex-row'>
+                    <div class='mb-5' id='bonus-answer'>Incorrect! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>
+                        <button class='text-sm xsm:text-lg flex items-center text-blue-800 ml-auto rounded-lg pb-10' onClick={subtractBonusPoints}>
+                            I was right
+                        </button> 
+                        </div> }
 
                     
 
