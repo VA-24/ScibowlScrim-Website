@@ -130,7 +130,6 @@ function ScibowlScrimSingleplayer(){
         } else {
             answerInputBonus.value = "";
             setBonusesIncorrect(bonusesIncorrect => bonusesIncorrect + 1);
-            setScore(score => score + 10);
             setBonusIncorrect(true);
             setBonusAnswered(true);
         }
