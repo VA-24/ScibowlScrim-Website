@@ -13,24 +13,32 @@ function ScibowlScrimSingleplayer(){
     const canBuzz = useRef(true);
     const [answerCorrect, setAnswerCorrect] = useState(false);
     const [answerIncorrect, setAnswerIncorrect] = useState(false);
+
+    const [bonusCorrect, setBonusCorrect] = useState(false);
+    const [bonusIncorrect, setBonusIncorrect] = useState(false);
+    const [bonusAnswered, setBonusAnswered] = useState(true);
     
     const [checkboxCategory, setCheckboxCategory] = useState('');
     const [checkboxParentPacket, setCheckboxParentPacket] = useState('');
 
-    const [questionData, setQuestionData] = useState('');
+    const [tossupData, setTossupData] = useState('');
+    const [bonusData, setBonusData] = useState('');
     const [tossupBody, setTossupBody] = useState('');
     const staticTossupBody = useRef('');
     const [tossupAnswer, setTossupAnswer] = useState('');
+    const [bonusBody, setBonusBody] = useState('');
+    const [bonusAnswer, setBonusAnswer] = useState('');
+    const [tossupType, setTossupType] = useState('');
+    const [bonusType, setbonusType] = useState('');
     const [parentPacket, setParentPacket] = useState('');
     const [category, setCategory] = useState('');
-    const [tossupType, setTossupType] = useState('');
+    
 
     const [tossupsSeen, setTossupsSeen] = useState(0);
     const [tossupsCorrect, setTossupsCorrect] = useState(0);
     const [tossupsIncorrect, setTossupsIncorrect] = useState(0);
-    const [bonusesSeen, setBonusesSeen] = useState('');
-    const [bonusesCorrect, setBonusesCorrect] = useState('');
-    const [bonusesIncorrect, setBonusesIncorrect] = useState('');
+    const [bonusesCorrect, setBonusesCorrect] = useState(0);
+    const [bonusesIncorrect, setBonusesIncorrect] = useState(0);
     const [score, setScore] = useState(0);
 
     const [history, setHistory] = useState([]);
@@ -79,31 +87,49 @@ function ScibowlScrimSingleplayer(){
         setScore(score => score + 4)
     };
 
-      const handleSubmit = (event) => {
+      const handleTossupSubmit = (event) => {
         event.preventDefault();
-        const answerInput = document.getElementById('answer-input');
+        const answerInput = document.getElementById('answer-input-tossup');
         if (tossupAnswer.toLowerCase().includes(answerInput.value.toLowerCase())) {
-          console.log('correct');
           setBuzzed(false);
           answerInput.value = "";
           setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1);
           setScore(score => score + 4);
           setAnswerCorrect(true);
-          const questionBody = document.getElementById('question-body');
+          const questionBody = document.getElementById('tossup-body');
           questionBody.value = staticTossupBody.current;
           setAnswered(true);
+          setBonusAnswered(false);
           
         } else {
-          console.log('wrong');
           setBuzzed(false);
           answerInput.value = "";
-          const questionBody = document.getElementById('question-body')
+          const questionBody = document.getElementById('tossup-body')
           questionBody.value = staticTossupBody.current;
           setTossupsIncorrect(tossupsIncorrect => tossupsIncorrect + 1);
           setAnswerIncorrect(true);
           setAnswered(true);
         }
       };
+
+      const handleBonusSubmit = (event) => {
+        event.preventDefault();
+        const answerInputBonus = document.getElementById('answer-input-bonus');
+        if (bonusAnswer.toLowerCase().includes(answerInputBonus.value.toLowerCase())) {
+          answerInputBonus.value = "";
+          setBonusesCorrect(bonusesCorrect => bonusesCorrect + 1);
+          setScore(score => score + 10);
+          setBonusCorrect(true);
+          setBonusAnswered(true);
+        } else {
+            answerInputBonus.value = "";
+            setBonusesIncorrect(bonusesIncorrect => bonusesIncorrect + 1);
+            setScore(score => score + 10);
+            setBonusIncorrect(true);
+            setBonusAnswered(true);
+        }
+      };
+
 
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -139,10 +165,12 @@ function ScibowlScrimSingleplayer(){
                 console.log(tossup_answer);
                 let bonus_type = docSnapshot.get('bonus_type');
                 let bonus_question = docSnapshot.get('bonus_question');
-                let bonus_anwer = docSnapshot.get('bonus_answer');
+                let bonus_answer = docSnapshot.get('bonus_answer');
     
-                let question_data = parent_packet + ' / ' + tossup_type + ' / ' + category;
-                setQuestionData(question_data);
+                let tossup_origin = parent_packet + ' / ' + tossup_type + ' / ' + category;
+                let bonus_origin = parent_packet + ' / ' + bonus_type + ' / ' + category;
+                setTossupData(tossup_origin);
+                setBonusData(bonus_origin);
                 staticTossupBody.current = ''
                 staticTossupBody.current = tossup_question;
                 setTossupBody('')
@@ -154,6 +182,12 @@ function ScibowlScrimSingleplayer(){
                 setAnswerIncorrect(false);
                 canBuzz.current = true;
                 setAnswered(false);
+                console.log(bonus_answer)
+
+                setBonusBody(bonus_question);
+                setBonusAnswer(bonus_answer);
+                setBonusCorrect(false);
+                setBonusIncorrect(false);
             
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
@@ -185,13 +219,15 @@ function ScibowlScrimSingleplayer(){
             fetchDoc();
         
             function handleKeyDown(event) {
-                const answerInput = document.getElementById('answer-input');
+                const answerInputTossup = document.getElementById('answer-input-tossup');
+                const answerInputBonus = document.getElementById('answer-input-bonus')
 
-                if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInput && isReading.current === false) {
+
+                if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInputTossup && document.activeElement !== answerInputBonus && isReading.current === false) {
                     fetchDoc();
                 }
 
-                if ((event.key === " ") && document.activeElement !== answerInput && !buzzed) {
+                if ((event.key === " ") && document.activeElement !== answerInputTossup && document.activeElement !== answerInputBonus && !buzzed) {
                     if (canBuzz.current === true){
                     isReading.current = false;
                         setBuzzed(true);
@@ -200,7 +236,7 @@ function ScibowlScrimSingleplayer(){
                     }
                 }
 
-                if ((event.key === "p") && document.activeElement !== answerInput) {
+                if ((event.key === "p") && document.activeElement !== answerInputTossup) {
                     if (isReading.current === false){
                         isReading.current = true;
                     } else {
@@ -273,19 +309,31 @@ function ScibowlScrimSingleplayer(){
             
                 <div class='w-2/3'>
                     
-                    <div class='py-5 font-bold' id='question-data'>{questionData}</div>
-                    <div class='mb-5' id='question-body'>{answered ? staticTossupBody.current : tossupBody}</div>
-                    {answerCorrect&& <div class='mb-5' id='question-answer'>Correct! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
-                    {answerIncorrect&& <div class='mb-5' id='question-answer'>Incorrect! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
-
+                    <div class='py-5 font-bold' id='tossup-data'>{tossupData}, Tossup:</div>
+                    <div class='mb-5' id='tossup-body'>{answered ? staticTossupBody.current : tossupBody}</div>
+                    {answerCorrect&& <div class='mb-5' id='tossup-answer'>Correct! Answer was: {tossupAnswer}</div>}
+                    {answerIncorrect&& <div class='mb-5' id='tossup-answer'>Incorrect! Answer was: {tossupAnswer}. Press 'n' to go to the next question.</div>}
                     {buzzed &&
-                    <form id='answer' onSubmit={handleSubmit}>
+                    <form id='answer-tossup' onSubmit={handleTossupSubmit}>
                         <div class='input-group flex flex-row mx-auto mb-3'>
-                        <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input' type='text' placeholder='Answer'></input>
-                        <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit' type='submit'>Guess</button>
+                        <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input-tossup' type='text' placeholder='Answer'></input>
+                        <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit-tossup' type='submit'>Guess</button>
                         </div>
                     </form>
                     }
+
+                    {answerCorrect&& <div class='mb-5 font-bold' id='bonus-data'>{bonusData}, Bonus:</div>}
+                    {answerCorrect&& <div class='mb-5' id='bonus-body'>{bonusBody}</div>}
+                    {!bonusAnswered && (<form id='answer-bonus' onSubmit={handleBonusSubmit}>
+                        <div class='input-group flex flex-row mx-auto mb-3'>
+                        <input class='form-control border border-gray rounded-lg w-full mr-2 p-1' id='answer-input-bonus' type='text' placeholder='Answer'></input>
+                        <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' id='answer-submit-bonus' type='submit'>Guess</button>
+                        </div>
+                    </form>)}
+                    {bonusCorrect&& <div class='mb-5' id='bonus-answer'>Correct! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>}
+                    {bonusIncorrect&& <div class='mb-5' id='bonus-answer'>Incorrect! Answer was: {bonusAnswer}. Press 'n' to go to the next question.</div>}
+
+                    
 
                     <div style={{ height: '0.2px', width: '100%', background: 'gray', marginBottom: '10px' }}></div>
 
@@ -311,9 +359,9 @@ function ScibowlScrimSingleplayer(){
                     <div class='mx-auto mb-3 ml-2' id='tossups-seen'>Tossups seen: {tossupsSeen}</div>
                     <div class='mx-auto mb-3 ml-2' id='tossups-correct'> Tossups correct: {tossupsCorrect}</div>
                     <div class='mx-auto mb-3 ml-2' id='tossups-incorrect'> Tossups incorrect: {tossupsIncorrect}</div>
-                    <div class='mx-auto mb-3 ml-2' id='bonuses-seen'> Bonuses seen: 0</div>
-                    <div class='mx-auto mb-3 ml-2' id='bonuses-correct'> Bonuses correct: 0</div>
-                    <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: 0</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-seen'> Bonuses seen: {tossupsCorrect}</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-correct'> Bonuses correct: {bonusesCorrect}</div>
+                    <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: {bonusesIncorrect}</div>
                     <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: {score}</div>
                      
                     <div class='relative group'>
