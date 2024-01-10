@@ -13,6 +13,13 @@ function ScibowlScrimSingleplayer(){
     const canBuzz = useRef(true);
     const [answerCorrect, setAnswerCorrect] = useState(false);
     const [answerIncorrect, setAnswerIncorrect] = useState(false);
+    const [paused, setPaused] = useState(false);
+    const [packets, setPackets] = useState([]);
+    const [categories, setCategories] = useState([]);
+    // tossup and bonus mode set true by default
+    const [tossupMode, setTossupMode] = useState(false);
+    const [bonusMode, setBonusMode] = useState(false);
+    const [tossupAndBonusMode, setTossupAndBonusMode] = useState(true);
 
     const [bonusCorrect, setBonusCorrect] = useState(false);
     const [bonusIncorrect, setBonusIncorrect] = useState(false);
@@ -79,6 +86,7 @@ function ScibowlScrimSingleplayer(){
           key: 'p',
         });
         window.dispatchEvent(event);
+        setPaused(!paused);
     };
 
     const addPoints = () => {
@@ -157,6 +165,41 @@ function ScibowlScrimSingleplayer(){
         }
       };
 
+      const updatePackets = (event) => {
+        const packetName = event.target.value;
+        const changePacketsList = packets;
+        if (changePacketsList.includes(packetName)) {
+            const indexToRemove = changePacketsList.indexOf(packetName);
+            changePacketsList.splice(indexToRemove, 1);
+        } else {
+            changePacketsList.push(packetName);
+        }
+        setPackets(changePacketsList);
+      };
+
+      const updateCategories = (event) => {
+        const categoryName = event.target.value;
+        const changeCategoriesList = categories;
+        if (changeCategoriesList.includes(categoryName)) {
+            const indexToRemove = changeCategoriesList.indexOf(categoryName);
+            changeCategoriesList.splice(indexToRemove, 1);
+        } else {
+            changeCategoriesList.push(categoryName);
+        }
+        setCategories(changeCategoriesList);
+      };
+
+      const updatePlayerMode = (event) => {
+        const mode = event.target.value;
+        if (mode === 'tossup and bonus') {
+            setTossupAndBonusMode(true);
+        } else if (mode === 'tossups') {
+            setTossupMode(true);
+        } else if (mode === 'bonuses') {
+            setBonusMode(true);
+        }
+      }
+
 
     const firebaseConfig = {
         apiKey: "AIzaSyBv1GvVPkXrohFC0N7GeZqWXrOfx2O0q5M",
@@ -174,9 +217,26 @@ function ScibowlScrimSingleplayer(){
 
         useEffect(() => {
             const fetchDoc = async () => {
-                
+
                 isReading.current = true;
-                const docNames = ScibowlScrimKeys['ScibowlScrim']
+                let packetList;
+                let categoryList;
+                
+                if (packets.length === 0) {
+                    packetList = ['scibowldb', 'mit', 'prometheus', 'esbot', 'lost', 'sbst', 'nsba', 'lexington'];
+                } else {
+                    packetList = packets;
+                }
+
+                if (categories.length === 0) {
+                    categoryList = ['math', 'physics', 'chemistry', 'biology', 'earth and space', 'energy'];
+                } else {
+                    categoryList = categories;
+                }
+
+                const randomPacket = packetList[Math.floor(Math.random() * packetList.length)]
+                const randomCategory = categoryList[Math.floor(Math.random() * categoryList.length)]
+                const docNames = ScibowlScrimKeys[randomPacket][randomCategory]
                 const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
         
                 const docRef = doc(db, "ScibowlScrim", randomDocName);
@@ -218,7 +278,7 @@ function ScibowlScrimSingleplayer(){
             
                 for (let i = 0; i < tossup_words.length; i++) {
                     setTimeout(() => {
-                        if (isReading.current !== false) {
+                        if (isReading.current) {
                             setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
                             if (i === (tossup_words.length - 1)) {
                                 isReading.current = false;
@@ -254,14 +314,13 @@ function ScibowlScrimSingleplayer(){
 
                 if ((event.key === "n" || event.key === "s") && document.activeElement !== answerInputTossup && document.activeElement !== answerInputBonus && isReading.current === false) {
                     fetchDoc();
-                }
+                }   
 
                 if ((event.key === " ") && document.activeElement !== answerInputTossup && document.activeElement !== answerInputBonus && !buzzed) {
                     if (canBuzz.current === true){
                     isReading.current = false;
                         setBuzzed(true);
                         canBuzz.current = false;
-                        console.log(canBuzz)
                     }
                 }
 
@@ -315,7 +374,7 @@ function ScibowlScrimSingleplayer(){
                         </button>  
 
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handlePause}>
-                            Pause
+                            {paused ? 'Resume' : 'Pause'}
                         </button>  
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
@@ -432,17 +491,17 @@ function ScibowlScrimSingleplayer(){
 
                         <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
                             <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='tossups and bonuses'/>
+                            <input type='checkbox' className='mr-3' value='tossups and bonuses'onChange={updatePlayerMode}/>
                             Tossups and Bonuses
                             </label>
 
                             <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='tossups' />
+                            <input type='checkbox' className='mr-3' value='tossups' onChange={updatePlayerMode}/>
                             Tossups
                             </label>
                             
                             <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='bonuses' />
+                            <input type='checkbox' className='mr-3' value='bonuses' onChange={updatePlayerMode}/>
                             Bonuses
                             </label>
                         </div>
@@ -461,32 +520,32 @@ function ScibowlScrimSingleplayer(){
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="math" onChange={(e) => setCheckboxCategory(e.target.value)} />
+                            <input type="checkbox" class='mr-3' value="math" onChange={updateCategories} />
                                 Math
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="physics" onChange={(e) => setCheckboxCategory(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="physics" onChange={updateCategories}/>
                                 Physics
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="chemistry" onChange={(e) => setCheckboxCategory(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="chemistry" onChange={updateCategories}/>
                                 Chemistry
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="biology" onChange={(e) => setCheckboxCategory(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="biology" onChange={updateCategories}/>
                                 Biology
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="earth and space" onChange={(e) => setCheckboxCategory(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="earth and space" onChange={updateCategories}/>
                                 Earth and Space
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="energy" onChange={(e) => setCheckboxCategory(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="energy" onChange={updateCategories}/>
                                 Energy
                             </label>
                             </div>
@@ -505,42 +564,42 @@ function ScibowlScrimSingleplayer(){
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="scibowldb" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="scibowldb" onChange={updatePackets}/>
                                 ScibowlDB (easy)
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="mit" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="mit" onChange={updatePackets}/>
                                 MIT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="esbot" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="esbot" onChange={updatePackets}/>
                                 ESBOT
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="prometheus" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="prometheus" onChange={updatePackets}/>
                                 Prometheus
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="lost" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="lost" onChange={updatePackets}/>
                                 LOST
                             </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="lexington" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="lexington" onChange={updatePackets}/>
                                 Lexington
                             </label>
                             
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="nsba" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="nsba" onChange={updatePackets}/>
                                 NSBA
                             </label>
 
                             <label class="block mb-0 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-                            <input type="checkbox" class='mr-3' value="sbst" onChange={(e) => setCheckboxParentPacket(e.target.value)}/>
+                            <input type="checkbox" class='mr-3' value="sbst" onChange={updatePackets}/>
                                 SBST
                             </label>
                             </div>
