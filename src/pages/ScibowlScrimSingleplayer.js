@@ -53,7 +53,6 @@ function ScibowlScrimSingleplayer(){
     const [expandedItems, setExpandedItems] = useState([]);
 
     useEffect(() => {
-        console.log("Selected Category:", checkboxCategory);
     }, [checkboxCategory]);
 
     const handleHistoryItemClick = (index) => {
@@ -255,7 +254,7 @@ function ScibowlScrimSingleplayer(){
                 let tossup_question = docSnapshot.get('tossup_question');
                 const tossup_words = tossup_question.split(' '); // split into array for processing
                 let tossup_answer = docSnapshot.get('tossup_answer');
-                console.log(tossup_answer);
+                // console.log(tossup_answer);
                 let bonus_type = docSnapshot.get('bonus_type');
                 let bonus_question = docSnapshot.get('bonus_question');
                 let bonus_answer = docSnapshot.get('bonus_answer');
@@ -275,7 +274,7 @@ function ScibowlScrimSingleplayer(){
                 setAnswerIncorrect(false);
                 canBuzz.current = true;
                 setAnswered(false);
-                console.log(bonus_answer)
+                // console.log(bonus_answer)
 
                 setBonusBody(bonus_question);
                 setBonusAnswer(bonus_answer);
