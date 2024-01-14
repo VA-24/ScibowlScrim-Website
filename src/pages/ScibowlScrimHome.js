@@ -28,9 +28,9 @@ function ScibowlScrimHome(){
                 </nav>
             </main>
 
-            <section class='relative flex flex-col justify-center items-center w-2/3'>
+            <section class='relative flex flex-col w-2/3'>
 
-                <h3 class='text-xl xl:text-2xl font-medium text-black mb-8'>
+                <h3 class='text-xl xl:text-2xl font-medium text-black mb-8 mx-auto'>
                     Welcome to ScibowlScrim!
                 </h3>
 
@@ -44,6 +44,10 @@ function ScibowlScrimHome(){
                     You can view the source code <a href='https://github.com/VA-24/ScibowlScrim-Website' class='text-blue-300'>here</a>. The backend was built with Python/Firebase and the frontend
                     was built with React and TailwindCSS. I welcome any pull requests or suggestions (to run a local version of the site, clone from the repository and follow the standard procedures for
                     installing firebase/tailwindcss).
+                </p>
+
+                <p class='text-base md:text-md text-black mb-5 justify-left items-left'>
+                    Built by <a href='https:agno3.me' class='text-blue-300'>Vardhan Agnihotri</a>, a scibowl enthusiast himself. 
                 </p>
             </section>
                 
