@@ -47,7 +47,7 @@ function ScibowlScrimHome(){
                 </p>
 
                 <p class='text-base md:text-md text-black mb-5 justify-left items-left'>
-                    Built by <a href='https:agno3.me' class='text-blue-300'>Vardhan Agnihotri</a>, a scibowl enthusiast himself. 
+                    Built by <a href='https://agno3.me' class='text-blue-300'>Vardhan Agnihotri</a>, a scibowl enthusiast himself. 
                 </p>
             </section>
                 
