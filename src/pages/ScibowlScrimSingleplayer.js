@@ -583,10 +583,10 @@ function ScibowlScrimSingleplayer(){
                                 MIT
                             </label>
 
-                            {/* <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             <input type="checkbox" class='mr-3' value="esbot" onChange={updatePackets}/>
                                 ESBOT
-                            </label> */}
+                            </label>
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             <input type="checkbox" class='mr-3' value="prometheus" onChange={updatePackets}/>
