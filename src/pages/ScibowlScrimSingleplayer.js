@@ -16,6 +16,7 @@ function ScibowlScrimSingleplayer(){
     const [paused, setPaused] = useState(false);
     const [packets, setPackets] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [questionReportId, setQuestionReportId] = useState('');
     // tossup and bonus mode set true by default
     const [tossupMode, setTossupMode] = useState(false);
     const [bonusMode, setBonusMode] = useState(false);
@@ -87,6 +88,10 @@ function ScibowlScrimSingleplayer(){
         });
         window.dispatchEvent(event);
         setPaused(!paused);
+    };
+
+    const handleReport = () => {
+        
     };
 
     const addPoints = () => {
@@ -238,6 +243,7 @@ function ScibowlScrimSingleplayer(){
                 const randomCategory = categoryList[Math.floor(Math.random() * categoryList.length)]
                 const docNames = ScibowlScrimKeys[randomPacket][randomCategory]
                 const randomDocName = docNames[Math.floor(Math.random() * docNames.length)];
+                setQuestionReportId(randomDocName);
         
                 const docRef = doc(db, "ScibowlScrim", randomDocName);
                 const docSnapshot = await getDoc(docRef);
@@ -325,10 +331,14 @@ function ScibowlScrimSingleplayer(){
                 }
 
                 if ((event.key === "p") && document.activeElement !== answerInputTossup) {
+                    
                     if (isReading.current === false){
                         isReading.current = true;
+                        setPaused(false);
+
                     } else {
-                    isReading.current = false;}
+                    isReading.current = false;
+                setPaused(true);}
                 }
             }
             
@@ -377,7 +387,7 @@ function ScibowlScrimSingleplayer(){
                             {paused ? 'Resume' : 'Pause'}
                         </button>  
                         
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5'>
+                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handleReport}>
                             Report
                         </button>
                         
@@ -573,10 +583,10 @@ function ScibowlScrimSingleplayer(){
                                 MIT
                             </label>
 
-                            <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            {/* <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             <input type="checkbox" class='mr-3' value="esbot" onChange={updatePackets}/>
                                 ESBOT
-                            </label>
+                            </label> */}
 
                             <label class="block mb-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             <input type="checkbox" class='mr-3' value="prometheus" onChange={updatePackets}/>
