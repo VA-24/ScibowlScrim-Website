@@ -276,6 +276,7 @@ function ScibowlScrimSingleplayer(){
                                 isReading.current = false;
                             }
                         }
+                        
                     }, i * 250);
                 }
                 
@@ -324,7 +325,9 @@ function ScibowlScrimSingleplayer(){
 
                     } else {
                     isReading.current = false;
-                setPaused(true);}
+                    setPaused(!paused);
+                    console.log(paused);
+            }
                 }
             }
             

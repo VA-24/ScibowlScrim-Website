@@ -28,11 +28,20 @@ function ScibowlScrimMultiplayer(){
                 </nav>
             </main>
 
-            <section class='relative flex flex-col justify-center items-center w-2/3'>
+            <section class='relative flex flex-col justify-center items-center w-full'>
 
                 <h3 class='text-xl xl:text-2xl font-medium text-black mb-8'>
-                    Coming Soon!
+                    Join a Room:
                 </h3>
+
+                <form id='room-entry'>
+                    <div class='input-group flex flex-row mx-auto mb-3 w-full'>
+                    <input class='form-control border border-gray rounded-lg mr-2 p-1' id='room-name' type='text' placeholder='Room name'></input>
+                    <button class='btn btn-success flex items-center text-white bg-blue-500 rounded-lg p-1' type='submit'>Enter</button>
+                    </div>
+                </form>
+
+
 
             </section>
                 
