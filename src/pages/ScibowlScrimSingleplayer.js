@@ -18,9 +18,6 @@ function ScibowlScrimSingleplayer(){
     const [categories, setCategories] = useState([]);
     const [questionReportId, setQuestionReportId] = useState('');
     // tossup and bonus mode set true by default
-    const [tossupMode, setTossupMode] = useState(false);
-    const [bonusMode, setBonusMode] = useState(false);
-    const [tossupAndBonusMode, setTossupAndBonusMode] = useState(true);
 
     const [bonusCorrect, setBonusCorrect] = useState(false);
     const [bonusIncorrect, setBonusIncorrect] = useState(false);
@@ -193,16 +190,6 @@ function ScibowlScrimSingleplayer(){
         setCategories(changeCategoriesList);
       };
 
-      const updatePlayerMode = (event) => {
-        const mode = event.target.value;
-        if (mode === 'tossup and bonus') {
-            setTossupAndBonusMode(true);
-        } else if (mode === 'tossups') {
-            setTossupMode(true);
-        } else if (mode === 'bonuses') {
-            setBonusMode(true);
-        }
-      }
 
 
     const firebaseConfig = {
@@ -493,28 +480,6 @@ function ScibowlScrimSingleplayer(){
                     <div class='mx-auto mb-3 ml-2' id='bonuses-incorrect'> Bonuses incorrect: {bonusesIncorrect}</div>
                     <div class='mx-auto mb-7 ml-2' id='bonuses-incorrect'> Score: {score}</div>
                      
-                    <div class='relative group'>
-                        <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
-                            Mode
-                        </h1>
-
-                        <div className='absolute hidden bg-white border border-gray-300 rounded px-4 space-y-2 group-hover:block z-50'>
-                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='tossups and bonuses'onChange={updatePlayerMode}/>
-                            Tossups and Bonuses
-                            </label>
-
-                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='tossups' onChange={updatePlayerMode}/>
-                            Tossups
-                            </label>
-                            
-                            <label className='block text-gray-700 hover:bg-gray-100 hover:text-gray-900'>
-                            <input type='checkbox' className='mr-3' value='bonuses' onChange={updatePlayerMode}/>
-                            Bonuses
-                            </label>
-                        </div>
-                    </div>
         
                     <div class='relative group'>
                         <h1 class='mx-auto font-bold border border-white rounded p-2 group-hover:text-blue-500 cursor-pointer'>
