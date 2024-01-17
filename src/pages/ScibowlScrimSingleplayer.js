@@ -269,7 +269,7 @@ function ScibowlScrimSingleplayer(){
                 setBonusIncorrect(false);
             
                 for (let i = 0; i < tossup_words.length; i++) {
-                    setTimeout(() => {
+                    window.setTimeout(() => {
                         if (isReading.current) {
                             setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
                             if (i === (tossup_words.length - 1)) {
@@ -317,18 +317,18 @@ function ScibowlScrimSingleplayer(){
                     }
                 }
 
-                if ((event.key === "p") && document.activeElement !== answerInputTossup) {
+            //     if ((event.key === "p") && document.activeElement !== answerInputTossup) {
                     
-                    if (isReading.current === false){
-                        isReading.current = true;
-                        setPaused(false);
+            //         if (isReading.current === false){
+            //             isReading.current = true;
+            //             setPaused(false);
 
-                    } else {
-                    isReading.current = false;
-                    setPaused(!paused);
-                    console.log(paused);
-            }
-                }
+            //         } else {
+            //         isReading.current = false;
+            //         setPaused(!paused);
+            //         console.log(paused);
+            // }
+            //     }
             }
             
             window.addEventListener("keydown", handleKeyDown);
@@ -372,9 +372,9 @@ function ScibowlScrimSingleplayer(){
                             Next
                         </button>  
 
-                        <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handlePause}>
+                        {/* <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handlePause}>
                             {paused ? 'Resume' : 'Pause'}
-                        </button>  
+                        </button>   */}
                         
                         <button class='text-md xmd:text-lg flex items-center text-white bg-blue-500 rounded-lg p-1.5' onClick={handleReport}>
                             Report
