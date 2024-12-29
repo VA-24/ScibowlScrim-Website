@@ -127,7 +127,7 @@ function ScibowlScrimSingleplayer(){
       const handleTossupSubmit = (event) => {
         event.preventDefault();
         const answerInput = document.getElementById('answer-input-tossup');
-        if (tossupAnswer.toLowerCase().includes(answerInput.value.toLowerCase())) {
+        if (answerInput !== "" && answerInput !== " " && tossupAnswer.toLowerCase().includes(answerInput.value.toLowerCase())) {
           setBuzzed(false);
           answerInput.value = "";
           setTossupsCorrect(tossupsCorrect => tossupsCorrect + 1);
@@ -267,17 +267,20 @@ function ScibowlScrimSingleplayer(){
                 setBonusAnswer(bonus_answer);
                 setBonusCorrect(false);
                 setBonusIncorrect(false);
+                let tossupText = '';
             
                 for (let i = 0; i < tossup_words.length; i++) {
-                    window.setTimeout(() => {
+                    
                         if (isReading.current) {
-                            setTossupBody((prevTossupBody) => prevTossupBody + ' ' + tossup_words[i]);
+                            tossupText = tossupText + ' ' + tossup_words[i];
+                            setTossupBody(tossupText);
+                            
                             if (i === (tossup_words.length - 1)) {
                                 isReading.current = false;
                             }
-                        }
-                        
-                    }, i * 250);
+                            await new Promise(resolve => setTimeout(resolve, 250));
+                        }                        
+                   
                 }
                 
 

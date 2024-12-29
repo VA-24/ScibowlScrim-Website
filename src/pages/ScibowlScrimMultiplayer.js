@@ -41,8 +41,6 @@ function ScibowlScrimMultiplayer(){
                     </div>
                 </form>
 
-
-
             </section>
                 
             </div>

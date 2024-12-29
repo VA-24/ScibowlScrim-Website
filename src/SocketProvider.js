@@ -19,8 +19,8 @@ function SocketProvider({ children }) {
         console.log(msg);
       });
   
-      socket.on('room/update', (game) => {
-        console.log('room/update', game);
+      socket.on('room/create', (game) => {
+        console.log('room/create', game);
         dispatch({ type: 'room/setRoomData', payload: game });
       });
   

@@ -35,20 +35,13 @@ function ScibowlScrimHome(){
                 </h3>
 
                 <p class='text-base md:text-md text-black mb-5'>
-                    This is a project of mine that lets you play science bowl tossups in real time (heavily inspired by <a href='https://qbreader.org' class='text-blue-400'>qbreader</a>).
+                    ScibowlScrim allows you to play tossups in real time (heavily inspired by <a href='https://qbreader.org' class='text-blue-400'>qbreader</a>).
                     You can either play <a href='/singleplayer' class='text-blue-400'>singleplayer</a>, which you can use to practice by yourself, or <a href='/multiplayer' class='text-blue-400'>multiplayer</a>, which you can use to scrimmage against other schools/see where your
-                    team needs to improve.
+                    team needs to improve (coming soon).
                 </p>
 
-                <p class='text-base md:text-md text-black mb-5'>
-                    You can view the source code <a href='https://github.com/VA-24/ScibowlScrim-Website' class='text-blue-300'>here</a>. The backend was built with Python/Firebase and the frontend
-                    was built with React and TailwindCSS. I welcome any pull requests or suggestions (to run a local version of the site, clone from the repository and follow the standard procedures for
-                    installing firebase/tailwindcss).
-                </p>
 
-                <p class='text-base md:text-md text-black mb-5 justify-left items-left'>
-                    Built by <a href='https://agno3.me' class='text-blue-300'>Vardhan Agnihotri</a>, a scibowl enthusiast himself. 
-                </p>
+
             </section>
                 
             </div>
