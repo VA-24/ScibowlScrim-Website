@@ -35,9 +35,7 @@ function ScibowlScrimHome(){
                 </h3>
 
                 <p class='text-base md:text-md text-black mb-5'>
-                    ScibowlScrim allows you to play tossups in real time (heavily inspired by <a href='https://qbreader.org' class='text-blue-400'>qbreader</a>).
-                    You can either play <a href='/singleplayer' class='text-blue-400'>singleplayer</a>, which you can use to practice by yourself, or <a href='/multiplayer' class='text-blue-400'>multiplayer</a>, which you can use to scrimmage against other schools/see where your
-                    team needs to improve (coming soon).
+                    Practice Science Bowl tossups in real-time with <a href='/singleplayer' class='text-blue-400'>singleplayer</a> mode or compete against other teams in <a href='/multiplayer' class='text-blue-400'>multiplayer</a> scrimmages.
                 </p>
 
 
